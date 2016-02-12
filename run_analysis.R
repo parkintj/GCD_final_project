@@ -6,39 +6,28 @@
 library(utils)
 library(dplyr)
 
-# Download the data (note this only needs to be done once):
-#if(!file.exists("./get_clean_data_assign")){dir.create("./get_clean_data_assign")}
-#url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
-#download.file(url, destfile="./get_clean_data_assign/data_pack.zip", method="curl")
-#unzip("./get_clean_data_assign/data_pack.zip", exdir="./get_clean_data_assign")
-
 # read in the data
-# top folder (to keep the next lines tidy):
-top_folder <- "./get_clean_data_assign/UCI_HAR_Dataset/"
+# Note that this script assumes your working directory is the
+# UCI_HAR_Dataset folder (or that the scripts/subfolders are in
+# your working directory).
 
 # read in feature and activity files:
-features1 <- read.table(paste0(top_folder, "features.txt"))
-act_labels1 <- read.table(paste0(top_folder, "activity_labels.txt"))
+features1 <- read.table("features.txt")
+act_labels1 <- read.table("activity_labels.txt")
 
 # modify the variable names in feature column 2 so they are neater:
 features_mod1 <- gsub("-","_",features1$V2)
 features_mod2 <- gsub("[(|)]", "", features_mod1)
 
 # read files in test directory:
-xtest1 <- read.table(paste0(top_folder, "test/X_test.txt"),
-                     col.names = features_mod2)
-ytest1 <- read.table(paste0(top_folder, "test/y_test.txt"),
-                     col.names = "actcode")
-subtest1 <- read.table(paste0(top_folder, "test/subject_test.txt"),
-                       col.names = "ID")
+xtest1 <- read.table("./test/X_test.txt", col.names = features_mod2)
+ytest1 <- read.table("./test/y_test.txt", col.names = "actcode")
+subtest1 <- read.table("./test/subject_test.txt", col.names = "ID")
 
 # then train directory:
-xtrain1 <- read.table(paste0(top_folder, "train/X_train.txt"),
-                      col.names = features_mod2)
-ytrain1 <- read.table(paste0(top_folder, "train/y_train.txt"),
-                      col.names = "actcode")
-subtrain1 <- read.table(paste0(top_folder, "train/subject_train.txt"),
-                        col.names = "ID")
+xtrain1 <- read.table("./train/X_train.txt", col.names = features_mod2)
+ytrain1 <- read.table("./train/y_train.txt", col.names = "actcode")
+subtrain1 <- read.table("./train/subject_train.txt", col.names = "ID")
 
 # Convert variables to data frames for use in dplyr:
 actlabels <- tbl_df(act_labels1)
@@ -105,8 +94,7 @@ for(i in 3:length(names(avg_data))){
 }
 
 # now export the resulting dataset:
-write.table(avg_data, 
-    file="./get_clean_data_assign/GCD_final_project/gcd_assignment_tidy_data.csv")
+write.table(avg_data, file="gcd_assignment_tidy_data.txt", row.name=FALSE)
 
 
 
